@@ -1,6 +1,9 @@
 import pygame
 from pygame.locals import *
 
+from bombsappear import BombsAppear
+from itemsappear import ItemsAppear
+
 
 class GameScreen:
     def __init__(self, fenetre):
@@ -17,6 +20,16 @@ class GameScreen:
         self.snake_segments = []
         self.create_snake()
         self.clock = pygame.time.Clock()
+
+        self.bombgreen = BombsAppear(20, 90)
+        self.bombgreen.change_bomb_type('bombgreen')
+        self.bombred = BombsAppear(220, 420)
+        self.bombred.change_bomb_type("bombred")
+        self.animation_counter = 0
+        self.animation_speed = 5
+
+        self.applegolden = ItemsAppear(50, 220)
+        self.applegolden.change_apple_type('applegolden')
 
     def create_snake(self):
         self.snake_segments.append(pygame.Rect(self.snake_x, self.snake_y, self.snake_length, 5))
@@ -83,6 +96,17 @@ class GameScreen:
             # Draw each segment of the snake
             for segment in self.snake_segments:
                 pygame.draw.rect(self.fenetre, self.tool_color, segment)
+
+            # Mettre à jour l'animation de la bombe bombgreen
+            if self.animation_counter % self.animation_speed == 0:
+                self.bombgreen.change_image()
+                self.bombred.change_image()
+            self.animation_counter += 1
+
+            self.bombgreen.draw_bombs(self.fenetre)
+            self.bombred.draw_bombs(self.fenetre)
+
+            self.applegolden.draw_apple(self.fenetre)
 
             pygame.display.flip()
             # Control the FPS based on the desired speed
