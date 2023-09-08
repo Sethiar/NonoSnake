@@ -1,16 +1,17 @@
 import pygame
 from pygame.locals import *
 
-from bombsappear import BombsAppear
-from itemsappear import ItemsAppear
+from bombs import Bombs
+from items import Items
 
+from itemsappear import Itemsappear
 
 class GameScreen:
     def __init__(self, fenetre):
         self.fenetre = fenetre
         self.screen_color = (0, 0, 0)
         self.tool_color = (255, 255, 255)
-        self.snake_length = 10
+        self.snake_length = 90
         self.snake_x = 10
         self.snake_y = 20
         self.snake_speed_x = 1
@@ -21,18 +22,20 @@ class GameScreen:
         self.create_snake()
         self.clock = pygame.time.Clock()
 
-        self.bombgreen = BombsAppear(20, 90)
+        self.bombgreen = Bombs(20, 90)
         self.bombgreen.change_bomb_type('bombgreen')
-        self.bombred = BombsAppear(220, 420)
+        self.bombred = Bombs(220, 420)
         self.bombred.change_bomb_type("bombred")
         self.animation_counter = 0
         self.animation_speed = 5
 
-        self.applegolden = ItemsAppear(50, 220)
+        self.applegolden = Items(50, 220)
         self.applegolden.change_apple_type('applegolden')
 
+        self.items = Itemsappear(150, 300)
+
     def create_snake(self):
-        self.snake_segments.append(pygame.Rect(self.snake_x, self.snake_y, self.snake_length, 5))
+        self.snake_segments.append(pygame.Rect(self.snake_x, self.snake_y, self.snake_length, 30))
 
     def game_over(self):
         self.background_gameover = pygame.image.load("image/game_over.jpg")
@@ -107,6 +110,7 @@ class GameScreen:
             self.bombred.draw_bombs(self.fenetre)
 
             self.applegolden.draw_apple(self.fenetre)
+            self.apple_type.draw(self.fenetre)
 
             pygame.display.flip()
             # Control the FPS based on the desired speed
