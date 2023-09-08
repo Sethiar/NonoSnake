@@ -1,6 +1,7 @@
 import pygame
 
-class ItemsAppear:
+
+class Items:
     def __init__(self, x, y):
         self.images = {'applegolden': [], 'applenormal': [], 'applerotten': []}
         self.load_images()
