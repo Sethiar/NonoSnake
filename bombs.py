@@ -1,7 +1,7 @@
 import pygame
 
 
-class BombsAppear(pygame.sprite.Sprite):
+class Bombs(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
         self.images = {'bombgreen': [], 'bombice': [], 'bombred': [], 'bombsound': []}
