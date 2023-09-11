@@ -39,7 +39,19 @@ class GameScreen:
         self.items = Itemsappear(200, 190)
 
     def create_snake(self):
-        self.snake_segments = [SnakeSegment(10, 20, 1, 0), SnakeSegment(0, 20, 1, 0)]
+        self.snake_segments = [SnakeSegment(10,20, 20, 60)]
+
+
+    def update_chain(self):
+        current_segment = self.snake_segments[0]
+        while current_segment.previous_segment:
+            # Mettez à jour la position du segment en fonction de la position du segment précédent
+            current_segment.x = current_segment.previous_segment.x
+            current_segment.y = current_segment.previous_segment.y
+            # Déplacez le segment de sa longueur
+            current_segment.x += current_segment.length
+            current_segment = current_segment.previous_segment
+
 
 
     def game_over(self):
@@ -89,6 +101,7 @@ class GameScreen:
                 if keys[K_UP] and self.direction_y != 1:
                     self.direction_x = 0
                     self.direction_y = -1
+                    print("K_up")
 
                 if keys[K_DOWN] and self.direction_y != -1:
                     self.direction_x = 0
@@ -102,19 +115,16 @@ class GameScreen:
                     self.direction_x = -1
                     self.direction_y = 0
 
-                for i in range(len(self.snake_segments) - 1, 0, -1):
-                    self.snake_segments[i] = self.snake_segments[i - 1].direction_x
-                    self.snake_segments[i] = self.snake_segments[i - 1].direction_y
-
-                self.snake_segments[0].direction_x = self.direction_x
-                self.snake_segments[0].direction_y = self.direction_y
+                self.snake_segments[0].rect.x += self.direction_x * self.snake_speed_x
+                self.snake_segments[0].rect.y += self.direction_y * self.snake_speed_y
+                self.update_chain()
 
                 # Mise à jour des
                 if (
-                        self.snake_segments[0].y < 0
-                        or self.snake_segments[0].y + self.snake_height >= 700
-                        or self.snake_segments[0].x < 0
-                        or self.snake_segments[0].x + self.snake_width >= 500
+                        self.snake_segments[0].rect.y < 0
+                        or self.snake_segments[0].rect.y + self.snake_height >= 700
+                        or self.snake_segments[0].rect.x < 0
+                        or self.snake_segments[0].rect.x + self.snake_width >= 500
                         ):
 
                     self.is_game_over = True
@@ -129,7 +139,8 @@ class GameScreen:
 
                 # Dessiner chaque segment du serpent
                 for segment in self.snake_segments:
-                    pygame.draw.rect(self.fenetre, self.tool_color, segment)
+                    segment_rect = pygame.Rect(segment.rect.x, segment.rect.y, self.snake_width, self.snake_height)
+                    pygame.draw.rect(self.fenetre, self.tool_color, segment_rect)
 
                 # Mettre à jour l'animation de la bombe bombgreen
                 if self.animation_counter % self.animation_speed == 0:
